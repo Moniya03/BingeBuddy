@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Search } from 'lucide-react' // LEARN: Lucide icons are imported like this
 import { Button } from '@/components/ui/button' // LEARN: Example of importing a shadcn/ui component
+// LEARN: Import the new robust TrendingCarousel component
+import { TrendingCarousel } from '@/components/TrendingCarousel'
 // LEARN: You can replace this with your own logo asset if you have one
 
 // LEARN: Placeholder genres, replace with TMDB API fetch later
@@ -77,6 +79,8 @@ function App() {
           </ul>
         </nav>
       </header>
+      {/* LEARN: Render the new TrendingCarousel as the hero section */}
+      <TrendingCarousel />
       {/* LEARN: Main content area placeholder */}
       <main className="flex-1 flex flex-col items-center justify-center p-8">
         <h1 className="text-4xl font-bold mb-4 text-blue-400">Welcome to BingeBuddy</h1>
