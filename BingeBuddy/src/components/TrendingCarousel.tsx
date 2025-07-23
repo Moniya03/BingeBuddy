@@ -1,5 +1,5 @@
 // LEARN: TrendingCarousel is robust, beautiful, and now fixes horizontal overflow and image distortion bugs.
-// LEARN: See comments for layout and object-cover fixes.
+// LEARN: Comments explain the layout and object-cover fixes for learning.
 
 import React, { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
@@ -82,31 +82,23 @@ export function TrendingCarousel() {
     // LEARN: Main carousel view with no horizontal overflow and no image distortion
     return (
       <div className="w-full">
-        {/* LEARN: Large, visible heading above the carousel */}
-        <h2 className="text-3xl md:text-4xl font-extrabold text-white my-6 text-center tracking-tight">
+        {/* LEARN: Heading uses the same blue as the BingeBuddy logo */}
+        <h2 className="text-3xl font-bold text-blue-400 px-4 md:px-8 mb-4 text-center">
           Trending Movies
         </h2>
-        {/*
-          LEARN: The carousel container uses w-full (not w-screen or vw units) to prevent horizontal overflow.
-          To ensure true full-width, place this component at the top level of your page, not inside a padded container.
-        */}
+        {/* LEARN: Carousel uses a 16:9 aspect ratio for a cinematic look */}
         <section
-          className="relative w-full bg-black h-[70vh] flex items-center justify-center overflow-hidden rounded-xl shadow-2xl"
+          className="relative w-full bg-black aspect-[16/9] flex items-center justify-center overflow-hidden rounded-xl shadow-2xl"
         >
           <div className="relative w-full h-full" ref={emblaRef}>
             <div className="flex h-full">
               {movies.map((movie, idx) => (
-                // LEARN: Each slide is relative and overflow-hidden to contain the absolutely positioned image
                 <div
                   className="min-w-full relative overflow-hidden transition-transform duration-700 h-full"
                   key={movie.id}
                   aria-hidden={selectedIndex !== idx}
-                  style={{ height: "70vh" }}
+                  // No fixed height, aspect ratio controls height
                 >
-                  {/*
-                    LEARN: The image is absolutely positioned, fills the container, and uses object-cover to preserve aspect ratio.
-                    This prevents distortion and cropping issues.
-                  */}
                   {movie.backdrop_path ? (
                     <img
                       src={TMDB_IMAGE_BASE + movie.backdrop_path}
