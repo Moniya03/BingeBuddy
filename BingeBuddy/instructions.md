@@ -54,7 +54,7 @@ BingeBuddy is a modern, aesthetic, and educational web application for discoveri
 
 7. **Learning Focus**
    - This project is for learning—**no comment is too obvious**.
-   - If you introduce a new React, TypeScript, or UI/UX concept, explain it with a `LEARN:` comment.
+   - If you introduce a new React, TypeScript, or UI/UX concept, explain it with a comment.
 
 8. **Resume-Ready**
    - The final product should be visually impressive and demonstrate best practices.
@@ -64,7 +64,7 @@ BingeBuddy is a modern, aesthetic, and educational web application for discoveri
 
 ## Example LLM Prompt
 
-> "Create a movie card component for BingeBuddy. Use shadcn/ui Card, Tailwind for styling, Lucide icons for any icons, and fetch movie data from the TMDB API. Add detailed comments with `LEARN:` prefix explaining all React and TypeScript concepts. Ensure the card looks modern, is in dark mode with blue accents, and is easy to read. Install any required shadcn/ui components using npm."
+> "Create a movie card component for BingeBuddy. Use shadcn/ui Card, Tailwind for styling, Lucide icons for any icons, and fetch movie data from the TMDB API. Add detailed comments with all React and TypeScript concepts. Ensure the card looks modern, is in dark mode with blue accents, and is easy to read. Install any required shadcn/ui components using npm."
 
 ---
 
@@ -76,7 +76,7 @@ BingeBuddy is a modern, aesthetic, and educational web application for discoveri
 - [ ] Use Lucide React for icons
 - [ ] Fetch all data from TMDB API (verify endpoints)
 - [ ] Write simple, readable code
-- [ ] Add detailed, educational comments (prefix: `LEARN:`)
+- [ ] Add detailed, educational comments
 - [ ] Ensure dark mode with blue accent
 - [ ] Make the UI modern, aesthetic, and resume-worthy
 

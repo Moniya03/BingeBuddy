@@ -2,7 +2,28 @@ import React, { useEffect, useState } from "react";
 
 const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w342";
 
-export function MovieRow({ title, fetchUrl, onTitleClick }) {
+// Map curated types to TMDB endpoints and titles
+const CURATED_CONFIG = {
+  new_releases: {
+    title: "Newly Released",
+    url: "/movie/now_playing",
+  },
+  top_rated: {
+    title: "Highest Rated",
+    url: "/movie/top_rated",
+  },
+  award_winning: {
+    title: "Award-Winning",
+    url: "/discover/movie?with_keywords=818|1516|9951",
+  },
+  classics: {
+    title: "All-Time Classics",
+    url: "/discover/movie?sort_by=vote_average.desc&vote_count.gte=3000",
+  },
+};
+
+export function CuratedPage({ type, onBack }) {
+  const config = CURATED_CONFIG[type];
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +35,7 @@ export function MovieRow({ title, fetchUrl, onTitleClick }) {
       setError(null);
       try {
         const res = await fetch(
-          `https://api.themoviedb.org/3${fetchUrl}`,
+          `https://api.themoviedb.org/3${config.url}`,
           {
             headers: {
               Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
@@ -33,31 +54,23 @@ export function MovieRow({ title, fetchUrl, onTitleClick }) {
     }
     fetchMovies();
     return () => { isMounted = false; };
-  }, [fetchUrl]);
-
-  // Click handler for title and See All link
-  const handleTitleClick = (e) => {
-    e.preventDefault();
-    if (onTitleClick) onTitleClick();
-  };
+  }, [type, config]);
 
   return (
-    <div className="mb-8 px-4 md:px-8">
-      {/* Title row with themed title and See All link */}
-      <div className="flex items-center justify-between mb-3">
-        <h2
-          className="text-2xl font-bold text-blue-600 cursor-pointer hover:underline"
-          onClick={handleTitleClick}
-        >
-          {title}
+    <div className="w-full px-4 md:px-8 py-8">
+      {/* Themed heading for the curated section */}
+      <div className="flex items-center gap-4 mb-6">
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="text-blue-600 font-bold text-lg hover:underline"
+          >
+            &lt; Back
+          </button>
+        )}
+        <h2 className="text-3xl font-bold text-blue-600">
+          {config.title}
         </h2>
-        <a
-          href="#"
-          className="text-blue-600 font-medium hover:underline text-sm md:text-base"
-          onClick={handleTitleClick}
-        >
-          See All &gt;
-        </a>
       </div>
       {/* Loading and error states */}
       {isLoading ? (
@@ -65,25 +78,21 @@ export function MovieRow({ title, fetchUrl, onTitleClick }) {
       ) : error ? (
         <div className="flex items-center justify-center h-32 text-red-400">{error}</div>
       ) : (
-        <div className="flex gap-3 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-200 pb-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {movies.map((movie) => (
-            <div
-              key={movie.id}
-              className="flex-shrink-0 w-28 md:w-40 cursor-pointer group"
-              title={movie.title}
-            >
+            <div key={movie.id} className="flex flex-col items-center">
               {movie.poster_path ? (
                 <img
                   src={TMDB_IMAGE_BASE + movie.poster_path}
                   alt={movie.title}
-                  className="rounded-lg w-full h-40 md:h-60 object-cover object-center group-hover:opacity-80 transition"
+                  className="rounded-lg w-full h-40 md:h-60 object-cover object-center mb-2"
                 />
               ) : (
-                <div className="w-full h-40 md:h-60 bg-gray-700 rounded-lg flex items-center justify-center text-xs text-white">
+                <div className="w-full h-40 md:h-60 bg-gray-700 rounded-lg flex items-center justify-center text-xs text-white mb-2">
                   No Image
                 </div>
               )}
-              <div className="mt-2 text-xs md:text-sm text-white text-center truncate">
+              <div className="text-xs md:text-sm text-white text-center truncate w-full">
                 {movie.title}
               </div>
             </div>

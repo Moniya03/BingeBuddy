@@ -1,30 +1,20 @@
-// LEARN: GenrePage displays all movies for a given genre in a responsive grid. It fetches from TMDB and shows a themed heading.
-// LEARN: The genreId prop is required. Loading and error states are handled robustly.
-
 import React, { useEffect, useState } from "react";
 
 const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w342";
 
-// LEARN: Map of genre IDs to names for display
+// Map of genre IDs to names for display
 const GENRE_NAMES = {
   28: "Action",
-  35: "Comedy",
-  27: "Horror",
-  18: "Drama",
-  10749: "Romance",
-  16: "Animation",
   12: "Adventure",
-  53: "Thriller",
-  14: "Fantasy",
+  16: "Animation",
+  35: "Comedy",
   80: "Crime",
-  99: "Documentary",
-  878: "Science Fiction",
-  10751: "Family",
-  36: "History",
-  10402: "Music",
-  9648: "Mystery",
-  10752: "War",
-  37: "Western",
+  18: "Drama",
+  14: "Fantasy",
+  27: "Horror",
+  10749: "Romance",
+  878: "Sci-Fi",
+  53: "Thriller",
 };
 
 export function GenrePage({ genreId, onBack }) {
@@ -32,31 +22,36 @@ export function GenrePage({ genreId, onBack }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch multiple pages for a richer catalog
   useEffect(() => {
     let isMounted = true;
-    async function fetchMovies() {
+    async function fetchAllPages() {
       setIsLoading(true);
       setError(null);
+      let allResults = [];
       try {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
-              accept: "application/json",
-            },
-          }
-        );
-        if (!res.ok) throw new Error("Network response was not ok");
-        const data = await res.json();
-        if (isMounted) setMovies(data.results || []);
+        for (let page = 1; page <= 3; page++) {
+          const res = await fetch(
+            `https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&page=${page}`,
+            {
+              headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
+                accept: "application/json",
+              },
+            }
+          );
+          if (!res.ok) throw new Error("Network response was not ok");
+          const data = await res.json();
+          allResults = allResults.concat(data.results || []);
+        }
+        if (isMounted) setMovies(allResults);
       } catch (err) {
         if (isMounted) setError("Failed to load movies. Please try again later.");
       } finally {
         if (isMounted) setIsLoading(false);
       }
     }
-    fetchMovies();
+    fetchAllPages();
     return () => { isMounted = false; };
   }, [genreId]);
 
@@ -64,7 +59,7 @@ export function GenrePage({ genreId, onBack }) {
 
   return (
     <div className="w-full px-4 md:px-8 py-8">
-      {/* LEARN: Themed heading for the genre */}
+      {/* Themed heading for the genre */}
       <div className="flex items-center gap-4 mb-6">
         {onBack && (
           <button
@@ -78,7 +73,7 @@ export function GenrePage({ genreId, onBack }) {
           {genreName} Movies
         </h2>
       </div>
-      {/* LEARN: Loading and error states */}
+      {/* Loading and error states */}
       {isLoading ? (
         <div className="flex items-center justify-center h-32 text-white">Loading...</div>
       ) : error ? (
